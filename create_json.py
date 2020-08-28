@@ -42,11 +42,19 @@ def search_anilist(search, max_results=50):
     table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
+#No need to understand what the above does, it just uses the anilist api and creates a "table" using tabulate with the anilist results
 
 
 import os
 
 def extract_info(filename, directory):
+    """
+    This function parses the filename string to extract all the info
+    the database may need. It returns a tuple with: 
+        the title, 
+        the season number 
+        and a dictionary with episode info.
+    """
     try:
         title = filename.split(' ')
         misc = title.pop(-1).split('.')[0]
@@ -56,6 +64,7 @@ def extract_info(filename, directory):
         return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
     except IndexError:
         return
+    
 id_to_anime = {}
 
 def add_json(files, gg):
