@@ -1,6 +1,5 @@
-import requests
+import requests json os
 from io import StringIO
-import json
 from tabulate import tabulate
 
 def search_anilist(search, max_results=50):
@@ -12,11 +11,8 @@ def search_anilist(search, max_results=50):
                             title {
                                     english
                                     romaji
-                            }
-                    }
-            }
-    }
-    """
+                            }}}};"""
+    
     variables = {
             'search': search,
             'page': 1,
@@ -42,19 +38,8 @@ def search_anilist(search, max_results=50):
     table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
-#No need to understand what the above does, it just uses the anilist api and creates a "table" using tabulate with the anilist results
-
-
-import os
 
 def extract_info(filename, directory):
-    """
-    This function parses the filename string to extract all the info
-    the database may need. It returns a tuple with: 
-        the title, 
-        the season number 
-        and a dictionary with episode info.
-    """
     try:
         title = filename.split(' ')
         misc = title.pop(-1).split('.')[0]
@@ -64,7 +49,6 @@ def extract_info(filename, directory):
         return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
     except IndexError:
         return
-    
 id_to_anime = {}
 
 def add_json(files, gg):
@@ -110,6 +94,7 @@ def add_json(files, gg):
                 gg[ff]['Seasons'][season]['Episodes'].append(eps)
 
 def conv_list(gg):
+    # sorted(qualities, key=lambda a_entry: )
     for a, b in id_to_anime.items():
         seasons = gg[b]['Seasons']
         fg = []
