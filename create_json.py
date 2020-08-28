@@ -72,6 +72,12 @@ def extract_info(filename, directory):
 id_to_anime = {}
 
 def add_json(files, gg):
+    """
+    This function creates a dict with the layout that is desired
+    All the try excepts are to make that dict, 
+    because it will error if a key is missing 
+    thats why i have try except blocks to make the necessary and only needed keys
+    """
     for a in files:
         f = extract_info(a[0], a[1])
         if type(f) == type(None):
@@ -114,6 +120,12 @@ def add_json(files, gg):
                 gg[ff]['Seasons'][season]['Episodes'].append(eps)
 
 def conv_list(gg):
+    """
+    This function is responsible for 
+    1. taking the Seasons dict inside the generated dict from the above function
+    2. Converting it to an array
+    3. Sort the array to the correct seasons order
+    """
     for a, b in id_to_anime.items():
         seasons = gg[b]['Seasons']
         fg = []
@@ -124,12 +136,20 @@ def conv_list(gg):
 
 
 def save_to_json(data, path='./database.json'):
+    """
+    This function just saves the provided dict to a json file
+    """
     with open(path, 'w') as f:
         json.dump(data, f, indent=4)
 
 files_list = []
 
 for directory, __, files in os.walk(".", topdown=True):
+    """
+    This for loop makes a list 
+    with all the .mp4 files from the Current Working Directory
+    and all the subdirectories
+    """
     for file in files:
         if file.endswith('.mp4'):
             files_list.append([file, directory])
