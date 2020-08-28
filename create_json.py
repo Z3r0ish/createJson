@@ -3,6 +3,8 @@ from io import StringIO
 import json
 from tabulate import tabulate
 
+
+#####################################################################
 def search_anilist(search, max_results=50):
     query = """
     query ($id: Int, $page: Int, $search: String, $type: MediaType) {
@@ -42,7 +44,9 @@ def search_anilist(search, max_results=50):
     table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
-#No need to understand what the above does, it just uses the anilist api and creates a "table" using tabulate with the anilist results
+#####################################################################
+# No need to understand what the above does, 
+# it just uses the anilist api and creates a "table" using tabulate with the anilist results
 
 
 import os
