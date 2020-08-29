@@ -42,8 +42,16 @@ def search_anilist(search, max_results=50):
     return table, final_result
 
 #
-# No need to understand what the above does, 
-# it just uses the anilist api and creates a "table" using tabulate with the anilist results
+# No need to understand what the above does, it just uses the anilist api 
+#and creates a "table" using tabulate with the anilist results
+#
+
+#
+#This function parses the filename string to extract all the info the 
+#database may need. It returns a tuple with: 
+#    the title, 
+#    the season number 
+#    and a dictionary with episode info.
 #
 
 def extract_info(filename, directory):
@@ -56,6 +64,13 @@ def extract_info(filename, directory):
         return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
     except IndexError:
         return
+
+#
+#This function creates a dict with the layout that is desired
+#All the try excepts are to make that dict, 
+#because it will error if a key is missing 
+#thats why i have try except blocks to make the necessary and only needed keys
+#
 
 def add_json(files, gg):
     for a in files:
@@ -99,6 +114,13 @@ def add_json(files, gg):
                 gg[ff]['Seasons'][season]['Episodes'] = []
                 gg[ff]['Seasons'][season]['Episodes'].append(eps)
 
+#
+#This function is responsible for 
+#1. taking the Seasons dict inside the generated dict from the above function
+#2. Converting it to an array
+#3. Sort the array to the correct seasons order
+#
+
 def conv_list(gg):
     for a, b in id_to_anime.items():
         seasons = gg[b]['Seasons']
@@ -108,9 +130,19 @@ def conv_list(gg):
         fg = sorted(fg, key=lambda entry: int(entry['Episodes'][0]['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', '')))
         gg[b]['Seasons'] = fg
 
+#
+#This function just saves the provided dict to a json file
+#
+
 def save_to_json(data, path=jsonPath):
     with open(path, 'w') as f:
         json.dump(data, f, indent=4)
+
+#
+#This for loop makes a list 
+#with all the .mp4 files from the Current Working Directory
+#and all the subdirectories
+#
 
 for directory, __, files in os.walk(".", topdown=True):
     for file in files:
