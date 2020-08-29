@@ -82,7 +82,7 @@ The databse.json will look like this:
                         "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E05.mp4"
                     }
                 ]
-            ]
+            }
         }
     }
 }
