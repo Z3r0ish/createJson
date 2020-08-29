@@ -21,7 +21,7 @@ A python script to generate a database.json file for [FastAni](private.fastani.n
 
 4. The script will make searches to [AniList](https://anilist.co) and print a pretty table. The user will be prompted to select a number.
 
-5. When all the unknown anime are searched and found the script will save a database.json with [this](#JSON Structure) structure, it will also save another JSON file with all the known anime, so that on the 2nd run and onwards it won't search again for the same anime, only for the unknown ones.
+5. When all the unknown anime are searched and found the script will save a database.json with [this](#JSON-Structure) structure, it will also save another JSON file with all the known anime, so that on the 2nd run and onwards it won't search again for the same anime, only for the unknown ones.
 
 
 
