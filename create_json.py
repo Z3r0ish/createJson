@@ -20,6 +20,10 @@ def search_anilist(search, max_results=50):
                                     english
                                     romaji
                             }
+                            streamingEpisodes {
+                                    title
+                                    thumbnail
+                            }
                     }
             }
     }
@@ -37,10 +41,16 @@ def search_anilist(search, max_results=50):
     result_list = results['data']['Page']['media']
     final_result = []
     count = 0
-
+    thumbnails = []
     for anime in result_list:
         jp_title = anime['title']['romaji']
         ani_id = anime['id']
+        thumbnail = anime['streamingEpisodes']
+        if bool(len(thumbnail)):
+            thumbnail = [x['thumbnail'] for x in thumbnail]
+            thumbnails.append(thumbnail)
+        else:
+            thumbnails.append(None)
 
         entry = [count, jp_title, ani_id]
         final_result.append(entry)
@@ -50,9 +60,6 @@ def search_anilist(search, max_results=50):
     table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
-
-
-
 
 def extract_info(filename, directory):
     """
@@ -67,7 +74,7 @@ def extract_info(filename, directory):
         misc = title.pop(-1).split('.')[0]
         season_num = misc.split('E')[0].replace('S', '')
         episode_num = misc.split('E')[1]
-        title = ' '.join(title).split('\\')[-1].split('/')[-1]
+        title = ' '.join(title).split('\\')[-1].split('/')[-1].strip()
         return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
     except IndexError:
         return
@@ -87,7 +94,6 @@ def read_config(config):
         return json.load(f)
 
 
-
 def add_json(files, gg):
     """
     This function creates a dict with the layout that is desired
@@ -99,7 +105,7 @@ def add_json(files, gg):
         f = extract_info(a[0], a[1])
         if type(f) == type(None):
             continue
-        title, season, eps = f
+        title, season, ep = f
         try:
             id_to_anime = read_config(default_config)
             ff = id_to_anime[title + '.' + season]
@@ -121,7 +127,7 @@ def add_json(files, gg):
             write_to_config(id_to_anime, default_config)
         try:
             try:
-                gg[ff]['Seasons'][season]['Episodes'].append(eps)
+                gg[ff]['Seasons'][season]['Episodes'].append(ep)
             except:
                 gg[ff]['Seasons'][season] = {}
                 gg[ff]['Seasons'][season]['Episodes'] = []
@@ -130,13 +136,13 @@ def add_json(files, gg):
                 gg[ff]['Seasons'] = {}
                 gg[ff]['Seasons'][season] = {}
                 gg[ff]['Seasons'][season]['Episodes'] = []
-                gg[ff]['Seasons'][season]['Episodes'].append(eps)
+                gg[ff]['Seasons'][season]['Episodes'].append(ep)
             except KeyError:
                 gg[ff] = {}
                 gg[ff]['Seasons'] = {}
                 gg[ff]['Seasons'][season] = {}
                 gg[ff]['Seasons'][season]['Episodes'] = []
-                gg[ff]['Seasons'][season]['Episodes'].append(eps)
+                gg[ff]['Seasons'][season]['Episodes'].append(ep)
 
 def conv_list(gg):
     """
@@ -161,8 +167,8 @@ def save_to_json(data, path='./database.json'):
     with open(path, 'w') as f:
         json.dump(data, f, indent=4)
 
-files_list = []
 
+files_list = []
 
 for directory, __, files in os.walk(".", topdown=True):
     """
