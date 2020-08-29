@@ -1,11 +1,17 @@
 import requests
 from io import StringIO
 import json
+import os
 from tabulate import tabulate
 
 
-#####################################################################
 def search_anilist(search, max_results=50):
+    """
+    This function builds a graphql request 
+    for the anilist graphql api, it then uses all the results retrieved 
+    to make a pretty table using the tabulate module 
+    and it returns that table along with the raw results.
+    """
     query = """
     query ($id: Int, $page: Int, $search: String, $type: MediaType) {
             Page (page: $page, perPage: 50) {
@@ -27,12 +33,12 @@ def search_anilist(search, max_results=50):
     }
     url = 'https://graphql.anilist.co'
 
-    response = requests.post(url, json={'query': query, 'variables': variables})
-    io = StringIO(response.text)
-    results = json.load(io)
+    results = requests.post(url, json={'query': query, 'variables': variables}).json()
+    
     result_list = results['data']['Page']['media']
     final_result = []
     count = 0
+
     for anime in result_list:
         jp_title = anime['title']['romaji']
         ani_id = anime['id']
@@ -40,16 +46,14 @@ def search_anilist(search, max_results=50):
         entry = [count, jp_title, ani_id]
         final_result.append(entry)
         count += 1
+
     headers = ['SlNo', "Title", "id"]
     table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
-#####################################################################
-# No need to understand what the above does, 
-# it just uses the anilist api and creates a "table" using tabulate with the anilist results
 
 
-import os
+
 
 def extract_info(filename, directory):
     """
