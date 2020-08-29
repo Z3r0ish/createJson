@@ -1,5 +1,4 @@
 import requests
-from io import StringIO
 import json
 import os
 from tabulate import tabulate
