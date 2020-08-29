@@ -59,7 +59,7 @@ The databse.json will look like this:
 {
     "99263" : {
         "Seasons" : [
-            "01" : {
+            {
                 "Episodes" : [
                     {
                         "ep" : "01",
