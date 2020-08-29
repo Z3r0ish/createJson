@@ -145,13 +145,13 @@ def conv_list(gg):
     2. Converting it to an array
     3. Sort the array to the correct seasons order
     """
-    for a, b in id_to_anime.items():
-        seasons = gg[b]['Seasons']
+    for a, b in gg.items():
+        seasons = gg[a]['Seasons']
         fg = []
         for c, d in seasons.items():
             fg.append(d)
         fg = sorted(fg, key=lambda entry: int(entry['Episodes'][0]['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', '')))
-        gg[b]['Seasons'] = fg
+        gg[a]['Seasons'] = fg
 
 
 def save_to_json(data, path='./database.json'):
