@@ -83,7 +83,7 @@ The databse.json will look like this:
                     }
                 ]
             }
-        }
+        ]
     }
 }
 ```
