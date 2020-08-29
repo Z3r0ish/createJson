@@ -6,7 +6,7 @@ A python script to generate a database.json file for [FastAni](private.fastani.n
 ## Requirements
 
 1. [Python](https://www.python.org/) 3.7 and above with pip.
-2. All files must follow [this](#Naming Scheme) naming scheme
+2. All files must follow [this](#Naming-Scheme) naming scheme
 3. The Python Modules [Tabulate](https://pypi.org/project/tabulate/) & [Requests](https://pypi.org/project/requests/).
 
 
