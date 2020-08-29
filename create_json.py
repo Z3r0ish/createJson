@@ -71,8 +71,22 @@ def extract_info(filename, directory):
         return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
     except IndexError:
         return
-    
+
+
+default_config = './config.json'
+
+def write_to_config(data, config):
+    with open(config, 'w') as f:
+        json.dump(data, f, indent=4)
+
 id_to_anime = {}
+def read_config(config):
+    if not os.path.isfile(config):
+        write_to_config({}, default_config)
+    with open(config, 'r') as f:
+        return json.load(f)
+
+
 
 def add_json(files, gg):
     """
@@ -87,7 +101,8 @@ def add_json(files, gg):
             continue
         title, season, eps = f
         try:
-            ff = id_to_anime[title]
+            id_to_anime = read_config(default_config)
+            ff = id_to_anime[title + '.' + season]
         except KeyError:
             table, ff = search_anilist(title)
             print(f'Search results for {title} season {season}')
@@ -102,7 +117,8 @@ def add_json(files, gg):
                 ff = str(choice[-1])
             else:
                 ff = num
-            id_to_anime[title] = ff
+            id_to_anime[title + '.' + season] = ff
+            write_to_config(id_to_anime, default_config)
         try:
             try:
                 gg[ff]['Seasons'][season]['Episodes'].append(eps)
@@ -147,6 +163,7 @@ def save_to_json(data, path='./database.json'):
 
 files_list = []
 
+os.chdir('H:/Anime')
 for directory, __, files in os.walk(".", topdown=True):
     """
     This for loop makes a list 
