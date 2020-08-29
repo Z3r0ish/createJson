@@ -89,5 +89,3 @@ The databse.json will look like this:
 ```
 
 It has the anilist id as the key entry, and inside it a json that has an array of seasons with their files.
-
-*NOTE: Due to a new bug its not an array of seasons but instead its a json.*
