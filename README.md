@@ -11,18 +11,18 @@ An python script to create a database for [FastAni](https://private.fastani.net/
 **[Issues](#issues)**<br>
 **[License](#Other)**<br>
 
-# To Do list
+## To Do list
 - [ ] Fix issues
 - [ ] Merge into the main repo
 - [x] ???
 
-# Requirements
+## Requirements
 * [Files must follow the Plex naming scheme](https://support.plex.tv/articles/naming-and-organizing-your-tv-show-files/ "Files must follow the Plex naming scheme")
 * [Python and pip](https://www.python.org/downloads/ "Python and pip")
 * [Tabulate (pip install tabulate)](https://pypi.org/project/tabulate/ "Selenium (pip install Tabulate)")
  * [Requests (pip install requests)](https://pypi.org/project/requests/ "Requests (pip install requests)")
 
-# Usage
+## Usage
 1. Install Python and pip
 2. Clone this repo at the root folder
 3. Run ``pip install tabulate`` and ``pip install requests`` or you could do ``pip install -r requirements.txt``
