@@ -146,7 +146,7 @@ def save_to_json(data, path=jsonPath):
 
 for directory, __, files in os.walk(".", topdown=True):
     for file in files:
-        if file.endswith('.mp4'):
+        if file.endswith(fileFormat):
             files_list.append([file, directory])
 
 hh = {}
