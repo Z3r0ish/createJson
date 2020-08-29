@@ -57,29 +57,29 @@ The databse.json will look like this:
 
 ```json
 {
-    "99263" : {
-        "Seasons" : [
+    "99263":{
+        "Seasons":[
             {
-                "Episodes" : [
+                "Episodes":[
                     {
-                        "ep" : "01",
-                        "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E01.mp4"
+                        "ep":"01",
+                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E01.mp4"
                     },
                     {
-                        "ep" : "02",
-                        "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E02.mp4"
+                        "ep":"02",
+                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E02.mp4"
                     },
                     {
-                        "ep" : "03",
-                        "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E03.mp4"
+                        "ep":"03",
+                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E03.mp4"
                     },
                     {
-                        "ep" : "04",
-                        "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E04.mp4"
+                        "ep":"04",
+                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E04.mp4"
                     },
                     {
-                        "ep" : "05",
-                        "file" : "./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E05.mp4"
+                        "ep":"05",
+                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E05.mp4"
                     }
                 ]
             }
