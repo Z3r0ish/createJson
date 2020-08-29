@@ -69,6 +69,8 @@ def extract_info(filename, directory):
         the season number 
         and a dictionary with episode info.
     """
+    #TODO: use regex for the season and episode number extraction
+    # re.search("S\d+E\d+", "One-Punch Man S01E01.mp4").group() ==> 'S01E01'
     try:
         title = filename.split(' ')
         misc = title.pop(-1).split('.')[0]
@@ -89,7 +91,7 @@ def write_to_config(data, config):
 id_to_anime = {}
 def read_config(config):
     if not os.path.isfile(config):
-        write_to_config({}, default_config)
+        write_to_config({"Known-Anime": {}}, default_config)
     with open(config, 'r') as f:
         return json.load(f)
 
@@ -108,7 +110,7 @@ def add_json(files, gg):
         title, season, ep = f
         try:
             id_to_anime = read_config(default_config)
-            ff = id_to_anime[title + '.' + season]
+            ff = id_to_anime["Known-Anime"][title + '.' + season]
         except KeyError:
             table, ff = search_anilist(title)
             print(f'Search results for {title} season {season}')
@@ -123,7 +125,7 @@ def add_json(files, gg):
                 ff = str(choice[-1])
             else:
                 ff = num
-            id_to_anime[title + '.' + season] = ff
+            id_to_anime["Known-Anime"][title + '.' + season] = ff
             write_to_config(id_to_anime, default_config)
         try:
             try:
