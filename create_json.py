@@ -77,7 +77,7 @@ default_config = './config.json'
 
 def write_to_config(data, config):
     with open(config, 'w') as f:
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=4, sort_keys=True)
 
 id_to_anime = {}
 def read_config(config):
