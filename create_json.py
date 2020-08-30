@@ -161,6 +161,9 @@ def conv_list(gg):
         fg = sorted(fg, key=lambda entry: int(entry['Episodes'][0]['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', '')))
         gg[a]['Seasons'] = fg
 
+        for kk in gg[a]['Seasons']:
+            kk['Episodes'] = sorted(kk['Episodes'], key=lambda entry: int(entry['file'].split(' ').pop(-1).split('.')[0].split('E')[1]))
+
 
 def save_to_json(data, path='./database.json'):
     """
@@ -172,7 +175,7 @@ def save_to_json(data, path='./database.json'):
 
 files_list = []
 
-for directory, __, files in os.walk(".", topdown=True):
+for directory, __, files in os.walk("."):
     """
     This for loop makes a list 
     with all the .mp4 files from the Current Working Directory
