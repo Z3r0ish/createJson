@@ -53,7 +53,7 @@ For Example:
 
 ## JSON Structure
 
-The databse.json will look like this:
+The database.json will look like this:
 
 ```json
 {
