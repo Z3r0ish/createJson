@@ -151,7 +151,7 @@ def conv_list(gg):
     This function is responsible for 
     1. taking the Seasons dict inside the generated dict from the above function
     2. Converting it to an array
-    3. Sort the array to the correct seasons order
+    3. Sort the array to the correct seasons/episodes order
     """
     for a, b in gg.items():
         seasons = gg[a]['Seasons']
