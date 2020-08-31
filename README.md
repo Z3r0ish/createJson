@@ -104,7 +104,7 @@ The databse.json will look like this:
 It has the anilist id as the key entry, and inside it a json that has an array of seasons with their files.
 
 # Issues
-- [The seasons dict conversion to an array (list) is not working or saved in the final result](https://github.com/ArjixGamer/create_json.py/issues/1 "The seasons dict conversion to an array (list) is not working or saved in the final result")
+~~- [The seasons dict conversion to an array (list) is not working or saved in the final result](https://github.com/ArjixGamer/create_json.py/issues/1 "The seasons dict conversion to an array (list) is not working or saved in the final result")~~
 
 
 # Other
