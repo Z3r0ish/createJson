@@ -1,5 +1,6 @@
 url = 'https://graphql.anilist.co'
 jsonPath = './database.json'
+jsonConfig = './config.json'
 fileFormat = '.mp4'
 
 #

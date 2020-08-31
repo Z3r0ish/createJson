@@ -36,6 +36,7 @@ All variables you can change are located in the config.py file. Most of them are
 | Variables  | Description                                                                     |
 |------------|---------------------------------------------------------------------------------|
 | jsonPath   | Where your generated json file is saved to, by default it's '\./database\.json' |
+| jsonConfig | Where your saved configs are, by default it's '\./config\.json'                 |
 | fileFormat | The file format which info is collected from, by default it's '\.mp4'           |
 
 ## Naming Scheme
