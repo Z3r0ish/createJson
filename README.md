@@ -9,7 +9,7 @@ An python script to create a database for [FastAni](https://private.fastani.net/
 **[Naming Scheme](#naming-scheme)**<br>
 **[JSON Structure](#json-structure)**<br>
 **[Issues](#issues)**<br>
-**[License](#Other)**<br>
+**[Other](#Other)**<br>
 
 ## To Do list
 - [ ] Fix issues
