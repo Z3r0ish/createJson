@@ -1,6 +1,6 @@
 ## Create JSON
 
-A python script to generate a database.json file for [FastAni](https://private.fastani.net), it walks thought all the files from the [CWD](https://en.wikipedia.org/wiki/Working_directory) and all its [Subdirectories](https://www.computerhope.com/jargon/s/subdirec.htm) and collects info from all the [.mp4](https://en.wikipedia.org/wiki/MPEG-4_Part_14) files.
+A python script to generate a database.json file, it walks thought all the files from the [CWD](https://en.wikipedia.org/wiki/Working_directory) and all its [Subdirectories](https://www.computerhope.com/jargon/s/subdirec.htm) and collects info from all the [.mp4](https://en.wikipedia.org/wiki/MPEG-4_Part_14) files.
 
 
 ## Requirements
