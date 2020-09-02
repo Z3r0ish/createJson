@@ -2,7 +2,7 @@ import requests
 import json
 import os
 from tabulate import tabulate
-
+import itertools as iteri
 
 def search_anilist(search, max_results=50):
     """
@@ -20,6 +20,7 @@ def search_anilist(search, max_results=50):
                                     english
                                     romaji
                             }
+                            episodes
                             streamingEpisodes {
                                     title
                                     thumbnail
@@ -40,6 +41,7 @@ def search_anilist(search, max_results=50):
     
     result_list = results['data']['Page']['media']
     final_result = []
+    result = []
     count = 0
     thumbnails = []
     for anime in result_list:
@@ -52,12 +54,14 @@ def search_anilist(search, max_results=50):
         else:
             thumbnails.append(None)
 
-        entry = [count, jp_title, ani_id]
-        final_result.append(entry)
+        entry1 = [count, jp_title, ani_id]
+        entry2 = [count, thumbnails, jp_title, anime['episodes'], ani_id]
+        final_result.append(entry2)
+        result.append(entry1)
         count += 1
 
     headers = ['SlNo', "Title", "id"]
-    table = tabulate(final_result, headers, tablefmt='psql')
+    table = tabulate(result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
 
@@ -90,7 +94,7 @@ def write_to_config(data, config):
 
 id_to_anime = {}
 def read_config(config):
-    if not os.path.isfile(config):
+    if not os.path.isfile(default_config):
         write_to_config({"Known-Anime": {}}, default_config)
     with open(config, 'r') as f:
         return json.load(f)
@@ -103,6 +107,7 @@ def add_json(files, gg):
     because it will error if a key is missing 
     thats why i have try except blocks to make the necessary and only needed keys
     """
+    thumbnails_dict = {}
     for a in files:
         f = extract_info(a[0], a[1])
         if type(f) == type(None):
@@ -110,7 +115,8 @@ def add_json(files, gg):
         title, season, ep = f
         try:
             id_to_anime = read_config(default_config)
-            ff = id_to_anime["Known-Anime"][title + '.' + season]
+            ff = id_to_anime["Known-Anime"][title + '.' + season]['ani_id']
+            pretty_title = id_to_anime["Known-Anime"][title + '.' + season]['pretty_title']
         except KeyError:
             table, ff = search_anilist(title)
             print(f'Search results for {title} season {season}')
@@ -121,12 +127,19 @@ def add_json(files, gg):
             except ValueError:
                 num = 0
             if num <= 50:
-                choice = ff[num] if num != '' else ff[0]
+                choice = ff[num]
+                pretty_title = str(choice[-2]).strip()
+                thumbs = choice[1][num]
                 ff = str(choice[-1])
             else:
                 ff = num
-            id_to_anime["Known-Anime"][title + '.' + season] = ff
-            write_to_config(id_to_anime, default_config)
+                thumbs = None
+
+            id_to_anime["Known-Anime"][title + '.' + season] = {}
+            id_to_anime["Known-Anime"][title + '.' + season]['ani_id'] = ff
+            id_to_anime['Known-Anime'][title + '.' + season]['pretty_title'] = pretty_title
+            id_to_anime['Known-Anime'][title + '.' + season]['thumbs'] = thumbs
+            
         try:
             try:
                 gg[ff]['Seasons'][season]['Episodes'].append(ep)
@@ -145,13 +158,15 @@ def add_json(files, gg):
                 gg[ff]['Seasons'][season] = {}
                 gg[ff]['Seasons'][season]['Episodes'] = []
                 gg[ff]['Seasons'][season]['Episodes'].append(ep)
+        gg[ff]['Seasons'][season]['pretty_title'] = pretty_title
+        write_to_config(id_to_anime, default_config)
 
 def conv_list(gg):
     """
     This function is responsible for 
     1. taking the Seasons dict inside the generated dict from the above function
     2. Converting it to an array
-    3. Sort the array to the correct seasons/episodes order
+    3. Sort the array to the correct seasons order
     """
     for a, b in gg.items():
         seasons = gg[a]['Seasons']
@@ -173,6 +188,40 @@ def save_to_json(data, path='./database.json'):
         json.dump(data, f, indent=4)
 
 
+def add_thumbs_to_eps():
+    config = read_config(default_config)
+    db = read_config('./database.json')
+    eps_dict = {}
+    new_dict = {}
+    for key, value in config['Known-Anime'].items():
+        eps_dict[value['ani_id']] = []
+        for img in value['thumbs']:
+            eps_dict[value['ani_id']].append(img)
+
+
+    for key, value in eps_dict.items():
+        if not key in db:
+            continue
+        eps = [x['Episodes'] for x in db[key]['Seasons']][0]
+        new_eps = []
+        for ep, thumb in iteri.zip_longest(eps, eps_dict[key], fillvalue='N/A'):
+            ep['thumb'] = thumb
+            new_eps.append(ep)
+
+        for ep in new_eps:
+            season_num = int(ep['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', ''))
+            try:
+                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'].append(ep)
+            except KeyError:
+                new_dict[str(key)] = {}
+                new_dict[str(key)]['Seasons'] = {}
+                new_dict[str(key)]['Seasons'][str(season_num)] = {}
+                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'] = []
+                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'].append(ep)
+    conv_list(new_dict)
+    return new_dict
+        
+
 files_list = []
 
 for directory, __, files in os.walk("."):
@@ -188,3 +237,4 @@ hh = {}
 add_json(files_list, hh)
 conv_list(hh)
 save_to_json(hh)
+save_to_json(add_thumbs_to_eps())
