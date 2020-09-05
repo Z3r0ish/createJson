@@ -60,31 +60,84 @@ The database.json will look like this:
 
 ```json
 {
-    "99263":{
-        "Seasons":[
+    "83097": {
+        "Seasons": [
             {
-                "Episodes":[
+                "Episodes": [
                     {
-                        "ep":"01",
-                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E01.mp4"
+                        "ep": "01",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E01.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
                     },
                     {
-                        "ep":"02",
-                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E02.mp4"
+                        "ep": "02",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E02.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
                     },
                     {
-                        "ep":"03",
-                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E03.mp4"
+                        "ep": "03",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E03.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
                     },
                     {
-                        "ep":"04",
-                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E04.mp4"
+                        "ep": "04",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E04.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
                     },
                     {
-                        "ep":"05",
-                        "file":"./The Rising of the Shield Hero/Season 1/The Rising of the Shield Hero S01E05.mp4"
+                        "ep": "05",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E05.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "06",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E06.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "07",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E07.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "08",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E08.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "09",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E09.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "10",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E10.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "11",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E11.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
+                    },
+                    {
+                        "ep": "12",
+                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E12.mp4",
+                        "directory": "H:/Anime/Yakusoku_no_Neverland",
+                        "season_num": "01"
                     }
-                ]
+                ],
+                "pretty_title": "The Promised Neverland"
             }
         ]
     }
