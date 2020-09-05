@@ -198,10 +198,24 @@ def add_json(files, gg):
         for key, value in tmdb_dict.items():
             if key == 'title':
                 continue
+
             if int(season) == int(key):
                 if str(int(ep['ep'])) in value:
                     dat = value[str(int(ep['ep']))]
-                    ep['thumb'] = dat['thumbnail']
+                    thumb_dir = os.path.join(ep['directory'], 'thumbs')
+                    if bool(dat['thumbnail']):
+
+                        if not os.path.isdir(thumb_dir):
+                            os.mkdir(thumb_dir)
+                        thumb = os.path.join(thumb_dir, f'''{anilist_id}_thumbnail_{ep['ep']}.jpg''')
+
+                        if not os.path.isfile(thumb):
+                            with open(thumb, 'wb') as f:
+                                f.write(requests.get(dat['thumbnail']).content)
+                    else:
+                        thumb = 'N/A'
+
+                    ep['thumb'] = thumb.replace('\\', '/')
                     ep['title'] = dat['title']
 
         gg[anilist_id]['Seasons'][season]['Episodes'].append(ep)
