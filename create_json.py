@@ -127,7 +127,8 @@ def read_config(config):
 
 def add_json(files, gg):
     """
-    This function creates a dict with the layout that is desired.
+    This function creates the dictionary that will be then converted and exported as a json.
+    It also manages the config.json with all the data needed to avoid promting the user for the anime result.
     """
     thumbnails_dict = {}
     for a in files:
