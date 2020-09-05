@@ -10,7 +10,7 @@ This project uses both the AniList and theMovieDB API's, thanks to tmdb I can ta
 
 1. [Python](https://www.python.org/) 3.7 and above with pip.
 2. All files must follow [this](#Naming-Scheme) naming scheme
-3. The Python Modules [Tabulate](https://pypi.org/project/tabulate/) & [Requests](https://pypi.org/project/requests/).
+3. The Python Modules [Tabulate](https://pypi.org/project/tabulate/), [Requests](https://pypi.org/project/requests/) & [tmdb_simple](https://pypi.org/project/tmdbsimple/).
 4. An API v3 key for [theMovieDB](https://www.themoviedb.org/settings/api).
 
 
