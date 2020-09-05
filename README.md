@@ -107,62 +107,6 @@ The database.json will look like this:
                         "season_num": "01",
                         "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/tqBJO3K6Qfg8SCTvqY6KzVY7BdQ.jpg",
                         "title": "301045"
-                    },
-                    {
-                        "ep": "06",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E06.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/pdlVrBEqYdAudqwdYesGzIUHuQZ.jpg",
-                        "title": "311045"
-                    },
-                    {
-                        "ep": "07",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E07.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/1TYFW08VvjK5gwBidlWk7wWCXbd.jpg",
-                        "title": "011145"
-                    },
-                    {
-                        "ep": "08",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E08.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/5JiTyxoO44tqkyzglHVfrMVF9Sb.jpg",
-                        "title": "021145"
-                    },
-                    {
-                        "ep": "09",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E09.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/8EpgmSuxcsKTB2WZTaxAuSJlD33.jpg",
-                        "title": "031145"
-                    },
-                    {
-                        "ep": "10",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E10.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/qX6DBqbQoZ9UPHbsCzCaM9GcaCm.jpg",
-                        "title": "130146"
-                    },
-                    {
-                        "ep": "11",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E11.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/jfVR52F24uiz5vl61xEHs4mzlak.jpg",
-                        "title": "140146"
-                    },
-                    {
-                        "ep": "12",
-                        "file": "H:/Anime/Yakusoku_no_Neverland/Yakusoku no Neverland S01E12.mp4",
-                        "directory": "H:/Anime/Yakusoku_no_Neverland",
-                        "season_num": "01",
-                        "thumb": "http://image.tmdb.org/t/p/w1280_and_h720_bestv2/2ly1dK8tdx2aNv5rLpjTEtPGUJ2.jpg",
-                        "title": "150146"
                     }
                 ],
                 "pretty_title": "The Promised Neverland"
