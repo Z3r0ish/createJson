@@ -4,6 +4,44 @@ import os
 from tabulate import tabulate
 import itertools as iteri
 
+import tmdbsimple as tmdb
+tmdb.API_KEY = 'TMDB_API_v3_KEY'
+
+def search_tmdb(query):
+    search = tmdb.Search()
+    response = search.tv(query=query)['results']
+    ids = []
+    for title in response:
+        ids.append([str(title['id']), title['name']])
+    result_dict = {}
+    table_list = []
+    count = 0
+    for i in ids:
+        f = tmdb.TV(int(i[0])).info()
+        if not 'ja' in f['languages']:
+            continue
+        result_dict[i[0]] = {}
+        result_dict[i[0]]['title'] = i[1]
+        g = f['number_of_seasons']
+        entry = [count, i[1], g]
+        headers = ['SlNo', "Title", "Total Seasons"]
+        table_list.append(entry)
+        count += 1
+        for k in range(int(g + 1)):
+            if k == 0:
+                continue
+            h = tmdb.TV_Seasons(int(i[0]), season_number=k).info()
+            result_dict[i[0]][str(k)] = {}
+            for u in h['episodes']:
+                result_dict[i[0]][str(k)][str(u['episode_number'])] = {
+                'title': u['name'], 
+                'thumbnail': f"http://image.tmdb.org/t/p/w1280_and_h720_bestv2{u['still_path']}" 
+                if u['still_path'] != None else None
+                }
+    table = tabulate(table_list, headers, tablefmt='psql')
+    table = '\n'.join(table.split('\n')[::-1])
+    return table, result_dict
+
 def search_anilist(search, max_results=50):
     """
     This function builds a graphql request 
@@ -19,11 +57,6 @@ def search_anilist(search, max_results=50):
                             title {
                                     english
                                     romaji
-                            }
-                            episodes
-                            streamingEpisodes {
-                                    title
-                                    thumbnail
                             }
                     }
             }
@@ -43,25 +76,17 @@ def search_anilist(search, max_results=50):
     final_result = []
     result = []
     count = 0
-    thumbnails = []
+
     for anime in result_list:
         jp_title = anime['title']['romaji']
         ani_id = anime['id']
-        thumbnail = anime['streamingEpisodes']
-        if bool(len(thumbnail)):
-            thumbnail = [x['thumbnail'] for x in thumbnail]
-            thumbnails.append(thumbnail)
-        else:
-            thumbnails.append(None)
 
-        entry1 = [count, jp_title, ani_id]
-        entry2 = [count, thumbnails, jp_title, anime['episodes'], ani_id]
-        final_result.append(entry2)
-        result.append(entry1)
+        entry = [count, jp_title, ani_id]
+        final_result.append(entry)
         count += 1
 
     headers = ['SlNo', "Title", "id"]
-    table = tabulate(result, headers, tablefmt='psql')
+    table = tabulate(final_result, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, final_result
 
@@ -81,7 +106,7 @@ def extract_info(filename, directory):
         season_num = misc.split('E')[0].replace('S', '')
         episode_num = misc.split('E')[1]
         title = ' '.join(title).split('\\')[-1].split('/')[-1].strip()
-        return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')}
+        return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/'), 'directory': os.path.abspath(directory).replace('\\', '/')}
     except IndexError:
         return
 
@@ -113,52 +138,66 @@ def add_json(files, gg):
         if type(f) == type(None):
             continue
         title, season, ep = f
+        ep['season_num'] = season
         try:
             id_to_anime = read_config(default_config)
-            ff = id_to_anime["Known-Anime"][title + '.' + season]['ani_id']
+            anilist_id = id_to_anime["Known-Anime"][title + '.' + season]['ani_id']
+            tmdb_dict = id_to_anime["Known-Anime"][title + '.' + season]['tmdb_dict']
+            tmdb_id = anilist_id = id_to_anime["Known-Anime"][title + '.' + season]['tmdb_id']
             pretty_title = id_to_anime["Known-Anime"][title + '.' + season]['pretty_title']
-        except KeyError:
-            table, ff = search_anilist(title)
-            print(f'Search results for {title} season {season}')
-            print(table)
+
+        except KeyError: 
+            table1, anilist_id = search_anilist(title)
+            table2, tmdb_dict = search_tmdb(title)
+            print(f'Anilist results for: {title} Season: {season}')
+            print(table1)
             num = input("Select number: [0]: ")
+            print('\n')
+            ids = [x for x, i in tmdb_dict.items()]
+            print(f'theMovieDB results for: {title}.')
+            print(table2)
+            num1 = input("Select number: [0]: ")
+            print('\n----------------------------------------\n')
+
+
             try:
                 num = int(num)
             except ValueError:
                 num = 0
+            try:
+                num1 = int(num1)
+            except ValueError:
+                num1 = 0
+
             if num <= 50:
-                choice = ff[num]
-                pretty_title = str(choice[-2]).strip()
+                choice = anilist_id[num]
                 thumbs = choice[1][num]
-                ff = str(choice[-1])
+                anilist_id = str(choice[-1])
             else:
-                ff = num
+                anilist_id = num
                 thumbs = None
 
+            tmdb_dict = tmdb_dict[ids[num1]]
+            pretty_title = tmdb_dict['title']
+            tmdb_id = ids[num1]
             id_to_anime["Known-Anime"][title + '.' + season] = {}
-            id_to_anime["Known-Anime"][title + '.' + season]['ani_id'] = ff
+            id_to_anime["Known-Anime"][title + '.' + season]['ani_id'] = anilist_id
+            id_to_anime["Known-Anime"][title + '.' + season]['tmdb_id'] = ids[num1]
+            id_to_anime["Known-Anime"][title + '.' + season]['tmdb_dict'] = tmdb_dict
             id_to_anime['Known-Anime'][title + '.' + season]['pretty_title'] = pretty_title
-            id_to_anime['Known-Anime'][title + '.' + season]['thumbs'] = thumbs
-            
-        try:
-            try:
-                gg[ff]['Seasons'][season]['Episodes'].append(ep)
-            except:
-                gg[ff]['Seasons'][season] = {}
-                gg[ff]['Seasons'][season]['Episodes'] = []
-        except:
-            try:
-                gg[ff]['Seasons'] = {}
-                gg[ff]['Seasons'][season] = {}
-                gg[ff]['Seasons'][season]['Episodes'] = []
-                gg[ff]['Seasons'][season]['Episodes'].append(ep)
-            except KeyError:
-                gg[ff] = {}
-                gg[ff]['Seasons'] = {}
-                gg[ff]['Seasons'][season] = {}
-                gg[ff]['Seasons'][season]['Episodes'] = []
-                gg[ff]['Seasons'][season]['Episodes'].append(ep)
-        gg[ff]['Seasons'][season]['pretty_title'] = pretty_title
+
+        if not anilist_id in gg:
+            gg[anilist_id] = {}
+        if not 'Seasons' in gg[anilist_id]:
+            gg[anilist_id]['Seasons'] = {}
+        if not season in gg[anilist_id]['Seasons']:
+            gg[anilist_id]['Seasons'][season] = {}
+        if not 'Episodes' in gg[anilist_id]['Seasons'][season]:
+            gg[anilist_id]['Seasons'][season]['Episodes'] = []
+
+        gg[anilist_id]['Seasons'][season]['Episodes'].append(ep)
+        gg[anilist_id]['Seasons'][season]['pretty_title'] = pretty_title
+
         write_to_config(id_to_anime, default_config)
 
 def conv_list(gg):
@@ -168,16 +207,16 @@ def conv_list(gg):
     2. Converting it to an array
     3. Sort the array to the correct seasons order
     """
-    for a, b in gg.items():
-        seasons = gg[a]['Seasons']
+    for ani_id, b in gg.items():
+        seasons = gg[ani_id]['Seasons']
         fg = []
         for c, d in seasons.items():
             fg.append(d)
         fg = sorted(fg, key=lambda entry: int(entry['Episodes'][0]['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', '')))
-        gg[a]['Seasons'] = fg
+        gg[ani_id]['Seasons'] = fg
 
-        for kk in gg[a]['Seasons']:
-            kk['Episodes'] = sorted(kk['Episodes'], key=lambda entry: int(entry['file'].split(' ').pop(-1).split('.')[0].split('E')[1]))
+        for kk in gg[ani_id]['Seasons']:
+            kk['Episodes'] = sorted(kk['Episodes'], key=lambda entry: int(entry['ep']))
 
 
 def save_to_json(data, path='./database.json'):
@@ -186,40 +225,6 @@ def save_to_json(data, path='./database.json'):
     """
     with open(path, 'w') as f:
         json.dump(data, f, indent=4)
-
-
-def add_thumbs_to_eps():
-    config = read_config(default_config)
-    db = read_config('./database.json')
-    eps_dict = {}
-    new_dict = {}
-    for key, value in config['Known-Anime'].items():
-        eps_dict[value['ani_id']] = []
-        for img in value['thumbs']:
-            eps_dict[value['ani_id']].append(img)
-
-
-    for key, value in eps_dict.items():
-        if not key in db:
-            continue
-        eps = [x['Episodes'] for x in db[key]['Seasons']][0]
-        new_eps = []
-        for ep, thumb in iteri.zip_longest(eps, eps_dict[key], fillvalue='N/A'):
-            ep['thumb'] = thumb
-            new_eps.append(ep)
-
-        for ep in new_eps:
-            season_num = int(ep['file'].split(' ').pop(-1).split('.')[0].split('E')[0].replace('S', ''))
-            try:
-                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'].append(ep)
-            except KeyError:
-                new_dict[str(key)] = {}
-                new_dict[str(key)]['Seasons'] = {}
-                new_dict[str(key)]['Seasons'][str(season_num)] = {}
-                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'] = []
-                new_dict[str(key)]['Seasons'][str(season_num)]['Episodes'].append(ep)
-    conv_list(new_dict)
-    return new_dict
         
 
 files_list = []
@@ -237,4 +242,3 @@ hh = {}
 add_json(files_list, hh)
 conv_list(hh)
 save_to_json(hh)
-save_to_json(add_thumbs_to_eps())
