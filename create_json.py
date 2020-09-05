@@ -171,7 +171,6 @@ def add_json(files, gg):
 
             if num <= 50:
                 choice = anilist_id[num]
-                thumbs = choice[1][num]
                 anilist_id = str(choice[-1])
             else:
                 anilist_id = num
@@ -186,6 +185,7 @@ def add_json(files, gg):
             id_to_anime["Known-Anime"][title + '.' + season]['tmdb_dict'] = tmdb_dict
             id_to_anime['Known-Anime'][title + '.' + season]['pretty_title'] = pretty_title
 
+
         if not anilist_id in gg:
             gg[anilist_id] = {}
         if not 'Seasons' in gg[anilist_id]:
@@ -194,6 +194,15 @@ def add_json(files, gg):
             gg[anilist_id]['Seasons'][season] = {}
         if not 'Episodes' in gg[anilist_id]['Seasons'][season]:
             gg[anilist_id]['Seasons'][season]['Episodes'] = []
+        
+        for key, value in tmdb_dict.items():
+            if key == 'title':
+                continue
+            if int(season) == int(key):
+                if str(int(ep['ep'])) in value:
+                    dat = value[str(int(ep['ep']))]
+                    ep['thumb'] = dat['thumbnail']
+                    ep['title'] = dat['title']
 
         gg[anilist_id]['Seasons'][season]['Episodes'].append(ep)
         gg[anilist_id]['Seasons'][season]['pretty_title'] = pretty_title
