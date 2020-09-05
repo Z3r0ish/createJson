@@ -127,10 +127,7 @@ def read_config(config):
 
 def add_json(files, gg):
     """
-    This function creates a dict with the layout that is desired
-    All the try excepts are to make that dict, 
-    because it will error if a key is missing 
-    thats why i have try except blocks to make the necessary and only needed keys
+    This function creates a dict with the layout that is desired.
     """
     thumbnails_dict = {}
     for a in files:
