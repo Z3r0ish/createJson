@@ -143,7 +143,7 @@ def add_json(files, gg):
             id_to_anime = read_config(default_config)
             anilist_id = id_to_anime["Known-Anime"][title + '.' + season]['ani_id']
             tmdb_dict = id_to_anime["Known-Anime"][title + '.' + season]['tmdb_dict']
-            tmdb_id = anilist_id = id_to_anime["Known-Anime"][title + '.' + season]['tmdb_id']
+            tmdb_id = id_to_anime["Known-Anime"][title + '.' + season]['tmdb_id']
             pretty_title = id_to_anime["Known-Anime"][title + '.' + season]['pretty_title']
 
         except KeyError: 
@@ -174,7 +174,6 @@ def add_json(files, gg):
                 anilist_id = str(choice[-1])
             else:
                 anilist_id = num
-                thumbs = None
 
             tmdb_dict = tmdb_dict[ids[num1]]
             pretty_title = tmdb_dict['title']
