@@ -287,7 +287,7 @@ def save_to_json(data, path='./database.json'):
         
 
 files_list = []
-os.chdir('./html')
+
 for directory, __, files in os.walk(".", topdown=True):
     """
     This for loop makes a list 
