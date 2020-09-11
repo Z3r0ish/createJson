@@ -10,6 +10,8 @@ tmdb.API_KEY = 'TMDB_API_v3_KEY'
 def search_tmdb(query):
     search = tmdb.Search()
     response = search.tv(query=query)['results']
+    if len(response) < 1:
+        response = search.tv(query=query.split(' ')[0])['results']
     ids = []
     for title in response:
         ids.append([str(title['id']), title['name']])
@@ -24,7 +26,6 @@ def search_tmdb(query):
         result_dict[i[0]]['title'] = i[1]
         g = f['number_of_seasons']
         entry = [count, i[1], g]
-        headers = ['SlNo', "Title", "Total Seasons"]
         table_list.append(entry)
         count += 1
         for k in range(int(g + 1)):
@@ -38,6 +39,8 @@ def search_tmdb(query):
                 'thumbnail': f"http://image.tmdb.org/t/p/w1280_and_h720_bestv2{u['still_path']}" 
                 if u['still_path'] != None else None
                 }
+
+    headers = ['SlNo', "Title", "Total Seasons"]
     table = tabulate(table_list, headers, tablefmt='psql')
     table = '\n'.join(table.split('\n')[::-1])
     return table, result_dict
@@ -106,7 +109,13 @@ def extract_info(filename, directory):
         season_num = misc.split('E')[0].replace('S', '')
         episode_num = misc.split('E')[1]
         title = ' '.join(title).split('\\')[-1].split('/')[-1].strip()
-        return title, season_num, {'ep': episode_num, 'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/'), 'directory': os.path.abspath(directory).replace('\\', '/')}
+        ep = {
+            'ep': episode_num, 
+            'file': os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)).replace('\\', '/'), 
+            'directory': os.path.abspath(directory).replace('\\', '/'), 
+            'timestamp': os.path.getctime(os.path.abspath(os.path.join(directory.replace('\\', '/'), filename)))
+            }
+        return title, season_num, ep
     except IndexError:
         return
 
@@ -123,6 +132,24 @@ def read_config(config):
         write_to_config({"Known-Anime": {}}, default_config)
     with open(config, 'r') as f:
         return json.load(f)
+
+def search_tmdb_id(tmdb_id):
+    f = tmdb.TV(int(num1)).info()
+    result_dict = {tmdb_id: {}}
+    result_dict[tmdb_id]['title'] = f['name']
+    g = f['number_of_seasons']
+    for k in range(int(g + 1)):
+        if k == 0:
+            continue
+        h = tmdb.TV_Seasons(int(num1), season_number=k).info()
+        result_dict[tmdb_id][str(k)] = {}
+        for u in h['episodes']:
+            result_dict[tmdb_id][str(k)][str(u['episode_number'])] = {
+                'title': u['name'], 
+                'thumbnail': f"http://image.tmdb.org/t/p/w1280_and_h720_bestv2{u['still_path']}" 
+                if u['still_path'] != None else None
+            }
+    return result_dict
 
 
 def add_json(files, gg):
@@ -167,20 +194,31 @@ def add_json(files, gg):
             except ValueError:
                 num1 = 0
 
+            
+
             if num <= 50:
                 choice = anilist_id[num]
                 anilist_id = str(choice[-1])
             else:
                 anilist_id = num
 
-            tmdb_dict = tmdb_dict[ids[num1]]
+            if num1 > 20:
+                tmdb_dict = search_tmdb_id(num1)
+            else:
+                tmdb_dict = tmdb_dict[ids[num1]]
+                        
+
+            
             pretty_title = tmdb_dict['title']
             tmdb_id = ids[num1]
             id_to_anime["Known-Anime"][title + '.' + season] = {}
             id_to_anime["Known-Anime"][title + '.' + season]['ani_id'] = anilist_id
             id_to_anime["Known-Anime"][title + '.' + season]['tmdb_id'] = ids[num1]
+            if str(int(season)) in tmdb_dict:
+                tmdb_dict = {str(int(season)): tmdb_dict[str(int(season))]}
             id_to_anime["Known-Anime"][title + '.' + season]['tmdb_dict'] = tmdb_dict
             id_to_anime['Known-Anime'][title + '.' + season]['pretty_title'] = pretty_title
+            write_to_config(id_to_anime, default_config)
 
 
         if not anilist_id in gg:
@@ -208,17 +246,18 @@ def add_json(files, gg):
 
                         if not os.path.isfile(thumb):
                             with open(thumb, 'wb') as f:
+                                print(f'Downloading: {thumb}')
                                 f.write(requests.get(dat['thumbnail']).content)
                     else:
                         thumb = 'N/A'
 
-                    ep['thumb'] = thumb.replace('\\', '/')
+                    ep['thumb'] = thumb.replace('\\', '/').replace('/var/www/html/', 'https://private.fastani.net/')
                     ep['title'] = dat['title']
 
         gg[anilist_id]['Seasons'][season]['Episodes'].append(ep)
         gg[anilist_id]['Seasons'][season]['pretty_title'] = pretty_title
 
-        write_to_config(id_to_anime, default_config)
+        
 
 def conv_list(gg):
     """
@@ -248,8 +287,8 @@ def save_to_json(data, path='./database.json'):
         
 
 files_list = []
-
-for directory, __, files in os.walk("."):
+os.chdir('./html')
+for directory, __, files in os.walk(".", topdown=True):
     """
     This for loop makes a list 
     with all the .mp4 files from the Current Working Directory
